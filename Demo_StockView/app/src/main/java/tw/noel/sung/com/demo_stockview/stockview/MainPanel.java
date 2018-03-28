@@ -1,4 +1,4 @@
-package com.noel.sung.tw.demo_stockview.stockview;
+package tw.noel.sung.com.demo_stockview.stockview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -20,7 +20,7 @@ public class MainPanel extends View {
     private Context context;
     private RelativeLayout.LayoutParams layoutParams;
 
-    //畫板大小 預設 600px
+    //畫板大小 預設 800px
     private int panelSize = 800;
     //畫板背景色 預設 透明色
     private int panelColor = android.R.color.transparent;

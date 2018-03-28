@@ -1,4 +1,4 @@
-package com.noel.sung.tw.demo_stockview;
+package tw.noel.sung.com.demo_stockview;
 
 import org.junit.Test;
 

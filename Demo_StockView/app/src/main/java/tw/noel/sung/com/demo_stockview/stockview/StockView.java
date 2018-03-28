@@ -1,4 +1,4 @@
-package com.noel.sung.tw.demo_stockview.stockview;
+package tw.noel.sung.com.demo_stockview.stockview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 public class StockView extends RelativeLayout implements Runnable {
 
     private Context context;
-    private RelativeLayout.LayoutParams params;
+    private LayoutParams params;
 
 
     //預設寬高為600px

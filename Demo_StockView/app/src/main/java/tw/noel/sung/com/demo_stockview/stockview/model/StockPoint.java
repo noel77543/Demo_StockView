@@ -1,4 +1,4 @@
-package com.noel.sung.tw.demo_stockview.stockview.model;
+package tw.noel.sung.com.demo_stockview.stockview.model;
 
 /**
  * Created by noel on 2018/3/28.
