@@ -92,7 +92,6 @@ public class StockView extends RelativeLayout implements Runnable {
      */
     private void initPanel() {
         mainPanel = new MainPanel(context);
-
     }
 
 

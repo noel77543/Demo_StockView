@@ -8,8 +8,11 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+
+import java.math.BigDecimal;
 
 
 /**
@@ -29,15 +32,8 @@ public class MainPanel extends View {
     private Paint paint;
     private Path path;
     private final float textSize = 20.0f;
+    private BigDecimal bigDecimal;
 
-
-    //X最大
-    private int maxX = 100;
-    //Ｙ最大
-    private int maxY = 100;
-
-    private int[] xArrays;
-    private int[] yArrays;
 
 
     private Canvas canvas;
@@ -69,32 +65,38 @@ public class MainPanel extends View {
     /***
      * 定義ＸＹ最大值 並列出分區
      */
-    public void setMaxData(int maxX, int maxY) {
-        this.maxX = maxX;
-        this.maxY = maxY;
+    public void setMaxData(float maxX, float maxY) {
 
-        //計算Y軸 每個間劇
-        int yInterval = (int) ((panelSize - textSize - 2) / 5);
-        //計算X軸 每個間劇
-        int xInterval = (int) ((panelSize - textSize - 2) / 5);
+        //計算 每個間劇
+        float interval = (panelSize - (2 * RECESSION)) / 5;
 
 
 //        //計算Y軸開始的原點座標
 //        int xItemX = (int) paint.measureText();
-//
-//
-//        int startX = maxX / 5;
-//        int startY = maxY / 5;
-//
-//        for (int i = 0; i < 5; i++) {
-//
-//            canvas.drawText(startX + "", i * xInterval + xItemX + xOffset, xItemY, axisPaint);
-//            startX += startX;
-//
-//            canvas.drawText(startY + "", i * xInterval + xItemX + xOffset, xItemY, axisPaint);
-//            startY += startY;
-//
-//        }
+
+
+        float startX = maxX / 5;
+        float startY = maxY / 5;
+
+        for (int i = 0; i < 5; i++) {
+            Log.e("startX", startX + "");
+            //水平數據
+            canvas.drawLine((i + 1) * interval + RECESSION, panelSize - RECESSION - 20, (i + 1) * interval + RECESSION, panelSize - RECESSION + 20, paint);
+            canvas.drawText(startX + "", (i + 1) * interval + RECESSION, panelSize, paint);
+            startX += startX / (i + 1);
+            startX = new BigDecimal(startX)
+                    .setScale(1, BigDecimal.ROUND_HALF_UP)
+                    .doubleValue();
+            startX = startX.
+            //垂直數據
+            canvas.drawLine(RECESSION - 20, (4 -i) * interval + RECESSION,RECESSION + 20, (4 -i) * interval + RECESSION, paint);
+            canvas.drawText(startY + "", 0, (4 -i) * interval + RECESSION, paint);
+            startY += startY / (i + 1);
+            startY = new BigDecimal(startY)
+                    .setScale(1, BigDecimal.ROUND_HALF_UP)
+                    .doubleValue();
+
+        }
 
 
     }
@@ -126,9 +128,6 @@ public class MainPanel extends View {
      *
      */
     private void init() {
-        xArrays = new int[5];
-        yArrays = new int[5];
-
 
         //定義外圍畫筆路徑
         path = new Path();
@@ -161,6 +160,7 @@ public class MainPanel extends View {
         canvas.drawColor(context.getResources().getColor(panelColor));//畫布背景顏色
         canvas.drawPath(path, paint);
         this.canvas = canvas;
+        setMaxData(83, 1000);
     }
 
 }
