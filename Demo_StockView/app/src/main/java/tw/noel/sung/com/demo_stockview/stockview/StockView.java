@@ -14,7 +14,7 @@ import android.widget.TextView;
  * Created by noel on 2018/3/28.
  */
 
-public class StockView extends RelativeLayout implements Runnable {
+public class StockView extends RelativeLayout {
 
     private Context context;
     private LayoutParams params;
@@ -76,14 +76,11 @@ public class StockView extends RelativeLayout implements Runnable {
 
 
 
+        mainPanel.startDrawPanel();
         addView(mainPanel);
-    }
-
-    @Override
-    public void run() {
-
 
     }
+
 
     //-------
 

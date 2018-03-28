@@ -1,6 +1,7 @@
 package tw.noel.sung.com.demo_stockview.stockview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import java.math.BigDecimal;
@@ -19,7 +21,7 @@ import java.math.BigDecimal;
  * Created by noel on 2018/3/28.
  */
 
-public class MainPanel extends View {
+public class MainPanel extends ImageView {
     private Context context;
     private RelativeLayout.LayoutParams layoutParams;
 
@@ -32,11 +34,18 @@ public class MainPanel extends View {
     private Paint paint;
     private Path path;
     private final float textSize = 20.0f;
-    private BigDecimal bigDecimal;
 
 
-
+    private Bitmap bitmap;
     private Canvas canvas;
+    //最大值X與Y 預設1000
+    private float maxX = 1000;
+    private float maxY = 1000;
+    //分為幾部分 預設5
+    private int partOf = 5;
+    //單位
+    private String unit;
+
 
     public MainPanel(Context context) {
         super(context);
@@ -62,57 +71,26 @@ public class MainPanel extends View {
 
     //----------
 
-    /***
-     * 定義ＸＹ最大值 並列出分區
-     */
-    public void setMaxData(float maxX, float maxY) {
-
-        //計算 每個間劇
-        float interval = (panelSize - (2 * RECESSION)) / 5;
-
-
-//        //計算Y軸開始的原點座標
-//        int xItemX = (int) paint.measureText();
-
-
-        float startX = maxX / 5;
-        float startY = maxY / 5;
-
-        for (int i = 0; i < 5; i++) {
-            Log.e("startX", startX + "");
-            //水平數據
-            canvas.drawLine((i + 1) * interval + RECESSION, panelSize - RECESSION - 20, (i + 1) * interval + RECESSION, panelSize - RECESSION + 20, paint);
-            canvas.drawText(startX + "", (i + 1) * interval + RECESSION, panelSize, paint);
-            startX += startX / (i + 1);
-            startX = new BigDecimal(startX)
-                    .setScale(1, BigDecimal.ROUND_HALF_UP)
-                    .doubleValue();
-            startX = startX.
-            //垂直數據
-            canvas.drawLine(RECESSION - 20, (4 -i) * interval + RECESSION,RECESSION + 20, (4 -i) * interval + RECESSION, paint);
-            canvas.drawText(startY + "", 0, (4 -i) * interval + RECESSION, paint);
-            startY += startY / (i + 1);
-            startY = new BigDecimal(startY)
-                    .setScale(1, BigDecimal.ROUND_HALF_UP)
-                    .doubleValue();
-
-        }
-
-
-    }
-
-
-    //----------
 
     /***
-     * 設置畫板大小 -> 恆為正方形
+     * @param panelSize 圖片大小
+     * @param maxX 最大值X
+     * @param maxY 最大值Y
+     * @param unit 單位
+     * @param partOf 分成幾部分
      */
-    public void setPanelSize(int panelSize) {
+    public void setDataInfo(int panelSize,float maxX, float maxY,@Nullable String unit,int partOf) {
         this.panelSize = panelSize;
         layoutParams.width = panelSize;
         layoutParams.height = panelSize;
-
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.unit = unit;
+        this.partOf = partOf;
     }
+
+
+
     //-----------
 
     /***
@@ -129,6 +107,7 @@ public class MainPanel extends View {
      */
     private void init() {
 
+
         //定義外圍畫筆路徑
         path = new Path();
         path.moveTo(RECESSION, RECESSION);
@@ -143,7 +122,6 @@ public class MainPanel extends View {
         paint.setStyle(Paint.Style.STROKE);
         paint.setTextSize(textSize);
 
-
         layoutParams = new RelativeLayout.LayoutParams(panelSize, panelSize);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         setLayoutParams(layoutParams);
@@ -153,14 +131,42 @@ public class MainPanel extends View {
 
     //-----------
 
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    /***
+     *  設定好後 開始繪製
+     */
+    public void startDrawPanel() {
+        bitmap = Bitmap.createBitmap(panelSize, panelSize, Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
         canvas.drawColor(context.getResources().getColor(panelColor));//畫布背景顏色
         canvas.drawPath(path, paint);
-        this.canvas = canvas;
-        setMaxData(83, 1000);
+
+        //計算 每個間劇
+        float interval = (panelSize - (2 * RECESSION)) / 5;
+
+        float startX = maxX / 5;
+        float startY = maxY / 5;
+
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        for (int i = 0; i < 5; i++) {
+            Log.e("startX", startX + "");
+            //水平數據
+            canvas.drawLine((i + 1) * interval + RECESSION, panelSize - RECESSION - 20, (i + 1) * interval + RECESSION, panelSize - RECESSION + 20, paint);
+            canvas.drawText(startX + "", (i + 1) * interval + RECESSION, panelSize, paint);
+            startX += startX / (i + 1);
+            startX = new BigDecimal(startX)
+                    .setScale(1, BigDecimal.ROUND_HALF_UP)
+                    .floatValue();
+            //垂直數據
+            canvas.drawLine(RECESSION - 20, (4 - i) * interval + RECESSION, RECESSION + 20, (4 - i) * interval + RECESSION, paint);
+            canvas.drawText(startY + "", 0, (4 - i) * interval + RECESSION, paint);
+            startY += startY / (i + 1);
+            startY = new BigDecimal(startY)
+                    .setScale(1, BigDecimal.ROUND_HALF_UP)
+                    .floatValue();
+
+        }
+        setImageBitmap(bitmap);
     }
 
 }
