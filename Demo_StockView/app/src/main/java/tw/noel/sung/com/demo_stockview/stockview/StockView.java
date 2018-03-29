@@ -5,10 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import tw.noel.sung.com.demo_stockview.R;
 
 /**
  * Created by noel on 2018/3/28.
@@ -75,10 +78,6 @@ public class StockView extends RelativeLayout {
         initPanel();
 
 
-
-        mainPanel.startDrawPanel();
-        addView(mainPanel);
-
     }
 
 
@@ -89,32 +88,29 @@ public class StockView extends RelativeLayout {
      */
     private void initPanel() {
         mainPanel = new MainPanel(context);
+        addView(mainPanel);
     }
 
 
     //-------
 
-
-
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-//        paint.setColor(Color.BLACK);//畫筆颜色
-//        canvas.drawColor(Color.WHITE);//畫布背景顏色
-//        paint.setStrokeWidth((float) 10.0);//線條寬度
-//        canvas.drawLine(RECESSION, RECESSION, RECESSION, defaultSize - RECESSION, paint);
-//        canvas.drawLine(RECESSION, defaultSize - RECESSION, defaultSize - RECESSION, defaultSize - RECESSION, paint);        //绘制直线
-
-
-//        paint.setStrokeWidth((float) 5.0);              //设置线宽
-//        canvas.drawLine(50, 150, 450, 150, paint);      //绘制直线
-//        paint.setStrokeWidth((float) 10.0);             //设置线宽
-//        canvas.drawLine(50, 250, 450, 250, paint);      //绘制直线
-//        paint.setStrokeWidth((float) 15.0);             //设置线宽
-//        canvas.drawLine(50, 350, 450, 350, paint);      //绘制直线
-//        paint.setStrokeWidth((float) 20.0);             //设置线宽
-//        canvas.drawLine(50, 450, 450, 450, paint);      //绘制直线
-
+    /***
+     * 設置畫版外部參數
+     */
+    public void setOutSideDataOnStockView(int viewlWidth,int viewHeight, int maxX, int maxY, @Nullable String unitX, @Nullable String unitY, int partOfX, int partOfY){
+        mainPanel.setDataInfo(viewlWidth,viewHeight,maxX,maxY,unitX,unitY,partOfX,partOfY);
     }
+
+
+
+
+    //------
+    /***
+     * 在最後要呼叫此method 才進行繪製
+     */
+    public void draw(){
+        mainPanel.startDrawPanel();
+    }
+
+
 }
